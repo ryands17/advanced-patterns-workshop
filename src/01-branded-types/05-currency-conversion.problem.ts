@@ -1,5 +1,5 @@
-import { describe, it } from "vitest";
-import { Brand } from "../helpers/Brand";
+import { describe, it } from 'vitest';
+import { Brand } from '../helpers/Brand';
 
 interface User {
   id: string;
@@ -7,34 +7,41 @@ interface User {
   maxConversionAmount: number;
 }
 
+type AuthorisedUser = Brand<User, 'AuthorisedUser'>;
+type ConvertedAmount = Brand<number, 'ConvertedAmount'>;
+
 // Mocks a function that uses an API to convert
 // One currency to another
 const getConversionRateFromApi = async (
   amount: number,
   from: string,
-  to: string,
+  to: string
 ) => {
-  return Promise.resolve(amount * 0.82);
+  return Promise.resolve(amount * 0.82) as Promise<ConvertedAmount>;
 };
 
 // Mocks a function which actually performs the conversion
-const performConversion = async (user: User, to: string, amount: number) => {};
+const performConversion = async (
+  user: AuthorisedUser,
+  to: string,
+  amount: ConvertedAmount
+) => {};
 
-const ensureUserCanConvert = (user: User, amount: number): User => {
+const ensureUserCanConvert = (user: User, amount: ConvertedAmount) => {
   if (user.maxConversionAmount < amount) {
-    throw new Error("User cannot convert currency");
+    throw new Error('User cannot convert currency');
   }
 
-  return user;
+  return user as AuthorisedUser;
 };
 
-describe("Possible implementations", () => {
-  it("Should error if you do not authorize the user first", () => {
+describe('Possible implementations', () => {
+  it('Should error if you do not authorize the user first', () => {
     const handleConversionRequest = async (
       user: User,
       from: string,
       to: string,
-      amount: number,
+      amount: number
     ) => {
       const convertedAmount = await getConversionRateFromApi(amount, from, to);
 
@@ -43,12 +50,12 @@ describe("Possible implementations", () => {
     };
   });
 
-  it("Should error if you do not convert the amount first", () => {
+  it('Should error if you do not convert the amount first', () => {
     const handleConversionRequest = async (
       user: User,
       from: string,
       to: string,
-      amount: number,
+      amount: number
     ) => {
       // @ts-expect-error
       const authorizedUser = ensureUserCanConvert(user, amount);
@@ -58,12 +65,12 @@ describe("Possible implementations", () => {
     };
   });
 
-  it("Should pass type checking if you authorize the user AND convert the amount", () => {
+  it('Should pass type checking if you authorize the user AND convert the amount', () => {
     const handleConversionRequest = async (
       user: User,
       from: string,
       to: string,
-      amount: number,
+      amount: number
     ) => {
       const convertedAmount = await getConversionRateFromApi(amount, from, to);
       const authorizedUser = ensureUserCanConvert(user, convertedAmount);

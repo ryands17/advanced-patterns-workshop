@@ -1,4 +1,4 @@
-import { expect, it } from "vitest";
+import { expect, it } from 'vitest';
 
 /**
  * Here, we've actually got _multiple_ problem files!
@@ -31,7 +31,7 @@ const dispatchEvent = (event: UnionOfDispatchableEvents) => {
   // to a global handler
 };
 
-it("Should be able to dispatch a LOG_IN and LOG_OUT event", () => {
-  dispatchEvent({ type: "LOG_IN", username: "username", password: "password" });
-  dispatchEvent({ type: "LOG_OUT" });
+it('Should be able to dispatch a LOG_IN and LOG_OUT event', () => {
+  dispatchEvent({ type: 'LOG_IN', username: 'username', password: 'password' });
+  dispatchEvent({ type: 'LOG_OUT' });
 });

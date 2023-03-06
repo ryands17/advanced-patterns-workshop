@@ -1,11 +1,11 @@
-import { expect, it } from "vitest";
-import { z } from "zod";
+import { expect, it } from 'vitest';
+import { z } from 'zod';
 
-const makeZodSafeFunction = (
-  schema: unknown,
-  func: (arg: unknown) => unknown
+const makeZodSafeFunction = <Args, Result>(
+  schema: z.Schema<Args>,
+  func: (arg: Args) => Result
 ) => {
-  return (arg: unknown) => {
+  return (arg: Args) => {
     const result = schema.parse(arg);
     return func(result);
   };
@@ -21,7 +21,7 @@ const addTwoNumbers = makeZodSafeFunction(
   (args) => args.a + args.b
 );
 
-it("Should error on the type level AND the runtime if you pass incorrect params", () => {
+it('Should error on the type level AND the runtime if you pass incorrect params', () => {
   expect(() =>
     addTwoNumbers(
       // @ts-expect-error
@@ -30,6 +30,6 @@ it("Should error on the type level AND the runtime if you pass incorrect params"
   ).toThrow();
 });
 
-it("Should succeed if you pass the correct type", () => {
+it('Should succeed if you pass the correct type', () => {
   expect(addTwoNumbers({ a: 1, b: 2 })).toBe(3);
 });

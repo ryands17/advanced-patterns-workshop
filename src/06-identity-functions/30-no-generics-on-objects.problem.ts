@@ -12,13 +12,19 @@
  *
  * const config = makeConfigObj(config);
  */
+function makeConfigObj<T extends string>(config: {
+  routes: T[];
+  fetchers: { [key in T]?: () => any };
+}) {
+  return config;
+}
 
-export const configObj = {
-  routes: ["/", "/about", "/contact"],
+export const configObj = makeConfigObj({
+  routes: ['/', '/about', '/contact'],
   fetchers: {
     // @ts-expect-error
-    "/does-not-exist": () => {
+    '/does-not-exist': () => {
       return {};
     },
   },
-};
+});

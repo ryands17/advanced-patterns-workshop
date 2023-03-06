@@ -1,51 +1,43 @@
-import _ from "lodash";
-import { expect, it } from "vitest";
-import { doNotExecute, Equal, Expect } from "../helpers/type-utils";
+import _ from 'lodash';
+import { expect, it } from 'vitest';
+import { doNotExecute, Equal, Expect } from '../helpers/type-utils';
 
-/**
- * We've made a reusable function here to group
- * arrays of objects by age. I want you to:
- *
- * 1. Make sure that the errors (below) disappear
- * 2. Take a look at the typings for _.groupBy to
- * see if you can understand them.
- */
-const groupByAge = (array: unknown[]) => {
-  const grouped = _.groupBy(array, "age");
+const groupByAge = <T extends { age: number }>(array: T[]) => {
+  const grouped = _.groupBy(array, 'age');
 
   return grouped;
 };
 
 const result = groupByAge([
   {
-    name: "John",
+    name: 'John',
     age: 20,
   },
   {
-    name: "Jane",
+    name: 'Jane',
     age: 20,
   },
   {
-    name: "Mary",
+    name: 'Mary',
     age: 30,
   },
 ]);
 
-it("Should group the items by age", () => {
+it('Should group the items by age', () => {
   expect(result).toEqual({
     20: [
       {
-        name: "John",
+        name: 'John',
         age: 20,
       },
       {
-        name: "Jane",
+        name: 'Jane',
         age: 20,
       },
     ],
     30: [
       {
-        name: "Mary",
+        name: 'Mary',
         age: 30,
       },
     ],
@@ -56,16 +48,16 @@ it("Should group the items by age", () => {
   ];
 });
 
-it("Should not let you pass in an array of objects NOT containing age", () => {
+it('Should not let you pass in an array of objects NOT containing age', () => {
   doNotExecute(() => {
     groupByAge([
       {
         // @ts-expect-error
-        name: "John",
+        name: 'John',
       },
       {
         // @ts-expect-error
-        name: "Bill",
+        name: 'Bill',
       },
     ]);
   });

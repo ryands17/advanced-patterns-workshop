@@ -3,21 +3,21 @@ import express, {
   Request,
   RequestHandler,
   Response,
-} from "express";
-import { Equal, Expect } from "../helpers/type-utils";
+} from 'express';
+import { Equal, Expect } from '../helpers/type-utils';
 
 const app = express();
 
 const makeTypeSafeGet =
-  (
-    parser: (queryParams: Request["query"]) => unknown,
-    handler: RequestHandler
+  <T extends Record<string, string>>(
+    parser: (queryParams: Request['query']) => T,
+    handler: RequestHandler<any, any, any, T>
   ) =>
-  (req: Request, res: Response, next: NextFunction) => {
+  (req: Request<any, any, any, T>, res: Response, next: NextFunction) => {
     try {
       parser(req.query);
     } catch (e) {
-      res.status(400).send("Invalid query: " + (e as Error).message);
+      res.status(400).send('Invalid query: ' + (e as Error).message);
       return;
     }
 
@@ -26,8 +26,8 @@ const makeTypeSafeGet =
 
 const getUser = makeTypeSafeGet(
   (query) => {
-    if (typeof query.id !== "string") {
-      throw new Error("You must pass an id");
+    if (typeof query.id !== 'string') {
+      throw new Error('You must pass an id');
     }
 
     return {
@@ -41,9 +41,9 @@ const getUser = makeTypeSafeGet(
 
     res.json({
       id: req.query.id,
-      name: "Matt",
+      name: 'Matt',
     });
   }
 );
 
-app.get("/user", getUser);
+app.get('/user', getUser);
